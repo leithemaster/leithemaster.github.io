@@ -3,7 +3,7 @@
  *
  * Platform-free on purpose: it only needs a WebGL2 context. It knows
  * nothing about the DOM, canvases or React. The component that owns the
- * drawing surface (FluidInk.web.tsx today, an expo-gl GLView later)
+ * drawing surface (src/ink.ts)
  * feeds it sizes and pointer positions.
  *
  * Read in order: KNOBS (config.ts) -> SHADERS (shaders.ts) -> this file.
@@ -25,8 +25,12 @@ export type FluidHandle = {
 export type FluidOptions = {
   /** Skip the idle autopilot (respect the OS "reduce motion" setting). */
   reducedMotion?: boolean;
-  /** Called after each frame is drawn. expo-gl needs gl.endFrameEXP() here. */
+  /** Called after each frame is drawn. */
   onFrameEnd?: () => void;
+  /** Ink colors (0..1 RGB) the brush drifts between. Omit for the rotating rainbow. */
+  palette?: RGB[];
+  /** Stage color behind the ink (0..1 RGB). Black suits a `screen` blend over a photo. */
+  background?: RGB;
 };
 
 type Program = { program: WebGLProgram; u: Record<string, WebGLUniformLocation | null> };
@@ -289,12 +293,21 @@ export function createFluid(gl: WebGL2RenderingContext, options: FluidOptions = 
 
   /** Ink color: hue slowly rotates over time. Returns 0..1 RGB. */
   function inkColor(now: number): RGB {
+    const s = FLUID.inkStrength;
+    const palette = options.palette;
+    if (palette && palette.length > 0) {
+      // Drift slowly from one palette color to the next, wrapping around.
+      const t = (now * 0.00012) % palette.length;
+      const a = palette[Math.floor(t)];
+      const b = palette[(Math.floor(t) + 1) % palette.length];
+      const k = t - Math.floor(t);
+      return [0, 1, 2].map((i) => (a[i] + (b[i] - a[i]) * k) * s) as RGB;
+    }
     const h = (now * 0.00008) % 1;
     const f = (n: number) => {
       const k = (n + h * 6) % 6;
       return 1 - Math.max(0, Math.min(k, 4 - k, 1)); // HSV -> RGB, full saturation and value
     };
-    const s = FLUID.inkStrength;
     return [f(5) * s, f(3) * s, f(1) * s];
   }
 
@@ -303,7 +316,7 @@ export function createFluid(gl: WebGL2RenderingContext, options: FluidOptions = 
     // effect never sits still. The first real movement takes over.
     const idle = !pointer.inside && now - pointer.lastInput > FLUID.idleAfterMs;
     if (idle && !options.reducedMotion) {
-      const t = now / 1000;
+      const t = (now / 1000) * FLUID.autopilotSpeed;
       pointer.x = 0.5 + 0.3 * Math.sin(t * 0.83);
       pointer.y = 0.5 + 0.22 * Math.sin(t * 1.31 + 0.6);
     }
@@ -442,7 +455,7 @@ export function createFluid(gl: WebGL2RenderingContext, options: FluidOptions = 
   function render() {
     const u = use(P.display);
     const source = view === 'velocity' ? velocity.read : view === 'pressure' ? pressure!.read : dye.read;
-    const [r, g, b] = FLUID.background;
+    const [r, g, b] = options.background ?? FLUID.background;
     gl.uniform1i(u.uTexture, source.attach(0));
     gl.uniform1i(u.uView, view === 'velocity' ? 1 : view === 'pressure' ? 2 : 0);
     gl.uniform3f(u.uBackground, r, g, b);

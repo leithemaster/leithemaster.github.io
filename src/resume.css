@@ -1,0 +1,364 @@
+/* Resume: the old one-page sheet, set as a tarot card face in light stock.
+   On screen it wears the gilt frame; in print it is plain black on white. */
+
+.site-header--solid {
+  position: sticky;
+  background: color-mix(in srgb, var(--c-bg) 88%, transparent);
+  backdrop-filter: blur(10px);
+}
+
+.link {
+  color: var(--c-gold-hi);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: 0.04em;
+  text-decoration: none;
+}
+@media (hover: hover) {
+  .link:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+}
+.print-btn {
+  font: inherit;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+.resume-tools {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: var(--s-1) var(--s-4);
+  width: min(820px, 100% - 2 * var(--gutter));
+  min-height: 44px;
+  margin: var(--s-3) auto var(--s-2);
+}
+
+/* ---- the card ---- */
+.resume {
+  /* Corner medallion: a double ring around the four-point star, filled with the paper
+     so the gilt rules run into it and stop. 30px, centred where the rules turn (21px in). */
+  --corner: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Ccircle cx='15' cy='15' r='13.5' fill='%23ebe4d6' stroke='%238a6a24' stroke-width='1.2'/%3E%3Ccircle cx='15' cy='15' r='10.75' fill='none' stroke='%238a6a24' stroke-width='0.5'/%3E%3Cpath d='M15 7.5 L16.5 13.5 L22.5 15 L16.5 16.5 L15 22.5 L13.5 16.5 L7.5 15 L13.5 13.5Z' fill='%238a6a24'/%3E%3C/svg%3E");
+  position: relative;
+  width: min(820px, 100% - 2 * var(--gutter));
+  margin: 0 auto var(--s-12);
+  padding: clamp(3rem, 7vw, 5.5rem) clamp(2rem, 7vw, 5.5rem);
+  border-radius: 16px;
+  background: radial-gradient(120% 80% at 50% 0%, #f3eee3 0%, var(--c-paper) 60%);
+  color: var(--c-paper-ink);
+  font-size: 1rem;
+  line-height: 1.55;
+  box-shadow: 0 40px 80px -40px rgb(0 0 0 / 0.9);
+}
+/* ::before draws the double gilt rule (border + inset outline), square-cornered;
+   ::after lays the four medallions over the corners where the rules turn. */
+.resume::before,
+.resume::after {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+}
+.resume::before {
+  inset: 13px;
+  border: 1.5px solid var(--c-paper-gilt);
+  outline: 0.5px solid var(--c-paper-gilt);
+  outline-offset: -8px;
+}
+.resume::after {
+  inset: 0;
+  background:
+    var(--corner) left 6px top 6px / 30px no-repeat,
+    var(--corner) right 6px top 6px / 30px no-repeat,
+    var(--corner) left 6px bottom 6px / 30px no-repeat,
+    var(--corner) right 6px bottom 6px / 30px no-repeat;
+}
+.resume > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* The arcana cartouche across the top: THE QUERENT, between two rules. */
+.resume .resume__arcana { /* .resume p resets margins, so this needs the extra class */
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  /* Pulled up toward the frame, with more air before the name. */
+  margin: calc(var(--s-2) * -1) 0 var(--s-8);
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: 1.125rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--c-paper-gilt);
+}
+.resume__arcana::before,
+.resume__arcana::after {
+  content: '';
+  flex: 1;
+  height: 0.5px;
+  background: var(--c-paper-gilt);
+}
+.resume__arcana span {
+  letter-spacing: 0;
+  font-variant-numeric: lining-nums; /* Cormorant's old-style 0 reads as a letter o */
+}
+
+/* ---- the sheet's own typography, kept from the original resume ---- */
+.resume h1,
+.resume h2,
+.resume h3,
+.resume p,
+.resume ul,
+.resume dl,
+.resume dd {
+  margin: 0;
+}
+.resume h1 {
+  font-weight: 300;
+  font-size: clamp(2.5rem, 2rem + 2.5vw, 3.5rem);
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+.resume__title {
+  font-size: 1.125rem;
+  margin-top: var(--s-1) !important;
+}
+.resume__contact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px var(--s-3);
+  margin-top: var(--s-2) !important;
+  padding: 0;
+  list-style: none;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--c-paper-soft);
+}
+.resume__contact a {
+  color: var(--c-paper-ink);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+.resume__contact a:hover {
+  color: var(--c-paper-accent);
+}
+.resume :focus-visible {
+  outline-color: var(--c-paper-accent);
+}
+.resume p,
+.resume li,
+.resume dd {
+  max-width: 68ch;
+}
+.resume .job__stack {
+  max-width: none;
+}
+.resume__block {
+  margin-top: var(--s-4);
+  padding-top: var(--s-2);
+  border-top: 1px solid rgb(27 29 51 / 0.22);
+}
+.resume h2 {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: 0.8125rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--c-paper-soft);
+  margin-bottom: 12px;
+}
+.job + .job {
+  margin-top: var(--s-3);
+}
+.job__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--s-2);
+}
+.job h3 {
+  font-size: 1.0625rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+.job__when {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--c-paper-soft);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.job__proj {
+  color: var(--c-paper-soft);
+  margin-top: 2px !important;
+}
+.job h3 .job__proj {
+  font-weight: 400;
+  font-size: 0.9375rem;
+}
+.job ul {
+  list-style: none;
+  padding: 0;
+  margin-top: var(--s-1);
+  display: grid;
+  gap: 4px;
+}
+/* Grid, not absolute positioning: positioned items paint in a separate layer, which
+   pushes every bullet to the end of the PDF's text layer and scrambles ATS parsing. */
+.job li {
+  display: grid;
+  grid-template-columns: 18px 1fr;
+}
+.job li::before {
+  content: '—';
+  color: var(--c-paper-soft);
+}
+.job__stack {
+  margin-top: var(--s-1) !important;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--c-paper-soft);
+}
+.resume__cols dl {
+  display: grid;
+  gap: 6px;
+}
+.resume__cols dl div {
+  display: grid;
+  grid-template-columns: 8.5em 1fr;
+  gap: var(--s-2);
+}
+.resume__cols dt {
+  font-weight: 500;
+}
+
+@media screen and (max-width: 760px) {
+  .job__head {
+    flex-direction: column;
+    gap: 2px;
+  }
+  .resume__cols dl div {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .resume-tools {
+    justify-content: flex-start;
+  }
+}
+
+/* ---- print: the plain one-page sheet, same rules as the original ---- */
+@page {
+  size: letter;
+  margin: 0.35in 0.5in;
+}
+@media print {
+  .skip-link,
+  .site-header,
+  .resume-tools,
+  .resume__arcana {
+    display: none !important;
+  }
+  :root {
+    color-scheme: light;
+  }
+  html,
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+  .resume::before,
+  .resume::after {
+    display: none;
+  }
+  .resume p,
+  .resume li,
+  .resume dd {
+    max-width: none;
+  }
+  .resume__cols dl {
+    grid-template-columns: 1fr 1fr;
+    gap: 3pt 24pt;
+  }
+  .resume__cols dl div {
+    grid-template-columns: 7em 1fr;
+    gap: 8pt;
+  }
+  .resume__cols dl div:first-child,
+  .resume__cols dl div:nth-child(6),
+  .resume__cols dl div:nth-child(7) {
+    grid-column: 1 / -1;
+  }
+  .resume {
+    width: auto;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    border-radius: 0;
+    background: #fff;
+    box-shadow: none;
+    color: #000;
+    font-size: 9.25pt;
+    line-height: 1.28;
+  }
+  .resume h1 {
+    font-size: 22pt;
+  }
+  .job h3 {
+    font-size: 10.5pt;
+  }
+  .job__proj {
+    margin-top: 0 !important;
+  }
+  .resume__title {
+    font-size: 12pt;
+    margin-top: 4pt !important;
+  }
+  .resume__contact,
+  .resume h2,
+  .job__when,
+  .job__proj,
+  .job__stack,
+  .job li::before {
+    color: #333 !important;
+  }
+  .resume__block {
+    margin-top: 8pt;
+    padding-top: 5pt;
+    border-top: 0.5pt solid #999;
+  }
+  .resume h2 {
+    margin-bottom: 6pt;
+  }
+  .resume__contact {
+    margin-top: 8pt !important;
+  }
+  .job + .job {
+    margin-top: 7pt;
+  }
+  .job ul {
+    gap: 1pt;
+    margin-top: 4pt;
+  }
+  .job__stack {
+    margin-top: 4pt !important;
+  }
+  [aria-labelledby='r-exp'] .job__stack {
+    display: none; /* the Skills block lists these */
+  }
+  .job,
+  .resume__cols dl div {
+    break-inside: avoid;
+  }
+  .resume__contact a {
+    color: #000 !important;
+    text-decoration: none;
+  }
+}

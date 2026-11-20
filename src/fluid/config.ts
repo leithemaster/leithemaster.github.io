@@ -9,19 +9,21 @@ export const FLUID = {
   /** The colored ink texture. High = crisp ink edges. */
   dyeResolution: 1024,
   /** How fast the smoothed cursor chases the real one, per second. */
-  smoothing: 12,
+  smoothing: 5,
   /** 1 = the fluid is pushed at the cursor's own speed. */
-  splatForce: 1.0,
+  splatForce: 0.45,
   /** Size of each push (squared, in screen heights). */
-  splatRadius: 0.0025,
+  splatRadius: 0.0035,
   /** How much color one push adds. */
   inkStrength: 0.15,
-  /** How fast motion dies out, per second. */
-  velocityFade: 0.2,
-  /** How fast ink fades, per second. */
-  dyeFade: 0.9,
+  /** How fast motion dies out, per second. Higher = the smoke settles sooner. */
+  velocityFade: 0.6,
+  /** How fast ink fades, per second. Lower = it lingers. */
+  dyeFade: 0.55,
   /** Extra swirl. 0 = smooth and syrupy, high = turbulent. */
-  curlStrength: 28,
+  curlStrength: 14,
+  /** Speed of the idle drift, 1 = the original pace. */
+  autopilotSpeed: 0.45,
   /** How many times pressure is refined each frame. */
   pressureIterations: 20,
   /** How much of last frame's pressure is kept as a head start. */

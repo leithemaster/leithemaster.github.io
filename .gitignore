@@ -39,3 +39,10 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+
+# design skill checker output
+.taste-skill/
+shots/
+
+# installed design skills (42 MB, reinstall from skills-lock.json)
+.claude/skills/
