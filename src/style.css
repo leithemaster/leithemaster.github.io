@@ -1,0 +1,394 @@
+/* ==== TOKENS ====
+   Every value below the tokens comes from here. */
+:root {
+  /* Color: one ground, one surface, one ink, one muted ink, one accent (+ the tarot gold). */
+  --c-bg: #090a12;          /* night: the stage the ink runs on */
+  --c-surface: #12142a;
+  --c-text: #f1ece2;        /* bone: card stock */
+  --c-muted: #a9a6b8;       /* 8.3:1 on --c-bg */
+  --c-accent: #2f43d6;      /* ultramarine, sampled from the crowd's jackets. 2.7:1 on --c-bg: ink and fills only, never text */
+  --c-gold: #c9a24a;        /* tarot gilt, reserved for the cards */
+  --c-gold-hi: #ecd28f;     /* gilt catching the light */
+  --c-card: #0b1240;        /* card stock: deep ultramarine */
+  --c-card-glow: #1d2c95;   /* the lit centre of a card */
+
+  /* Paper: the resume's light card stock. */
+  --c-paper: #ebe4d6;
+  --c-paper-ink: #1b1d33;    /* 13.1:1 on paper */
+  --c-paper-soft: #55576e;   /* 5.6:1 on paper */
+  --c-paper-accent: #2433a8; /* 7.9:1 on paper: links */
+  --c-paper-gilt: #8a6a24;   /* 4.0:1 on paper: rules and ornament only */
+
+  /* Type: DM Sans for everything, DM Mono for labels. Scale 1.25. */
+  --font-sans: 'DM Sans', system-ui, sans-serif;
+  --font-mono: 'DM Mono', ui-monospace, monospace;
+  --font-serif: 'Cormorant Garamond', 'Times New Roman', serif; /* card titles only */
+  --fs-label: 0.75rem;
+  --fs-body: 1.0625rem;     /* 17px */
+  --fs-lede: clamp(1.25rem, 1rem + 1.2vw, 1.953rem);
+  --fs-display: clamp(3.5rem, 1rem + 11vw, 11rem);
+  --lh-body: 1.5;
+  --lh-tight: 0.9;
+
+  /* Space: 8px scale. */
+  --s-1: 0.5rem;
+  --s-2: 1rem;
+  --s-3: 1.5rem;
+  --s-4: 2rem;
+  --s-6: 3rem;
+  --s-8: 4rem;
+  --s-12: 6rem;
+
+  --radius-pill: 999px;
+  --wrap: 90rem;
+  --gutter: clamp(1rem, 4vw, 3rem);
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+
+  color-scheme: dark;
+}
+
+/* ==== BASE ==== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--c-bg);
+  color: var(--c-text);
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--c-text);
+  outline-offset: 3px;
+}
+
+.wrap {
+  width: 100%;
+  max-width: var(--wrap);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.label {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--c-muted);
+}
+
+.skip-link {
+  position: fixed;
+  top: var(--s-1);
+  left: var(--s-1);
+  z-index: 100;
+  padding: var(--s-1) var(--s-2);
+  background: var(--c-text);
+  color: var(--c-bg);
+  border-radius: var(--radius-pill);
+  transform: translateY(-200%);
+}
+.skip-link:focus-visible {
+  transform: none;
+}
+
+/* ==== HEADER ==== */
+.site-header {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 10;
+  padding-block: var(--s-2);
+}
+.site-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-2);
+}
+.wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-1);
+  min-height: 44px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+}
+.wordmark img {
+  width: 21px;
+  height: 36px;
+}
+.pill[aria-current='page'],
+.pill[data-current] {
+  background: var(--c-text);
+  color: var(--c-bg);
+}
+.pills {
+  display: flex;
+  gap: var(--s-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding-inline: var(--s-2);
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--c-bg) 55%, transparent);
+  backdrop-filter: blur(8px);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+/* ==== HERO ==== */
+.hero {
+  position: relative;
+  min-height: 100svh;
+  display: grid;
+  align-items: end;
+  overflow: hidden;
+  isolation: isolate;
+}
+.hero__photo,
+.hero__ink,
+.hero__shade {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.hero__photo {
+  object-fit: cover;
+  object-position: 50% 30%;
+  filter: saturate(0.85) brightness(0.8);
+  z-index: -3;
+}
+/* The ink lights the crowd and pulls back from the one person not in uniform.
+   --fx/--fy/--fr are set from JS to track the figure as the photo is cropped. */
+.hero__ink {
+  z-index: -2;
+  mix-blend-mode: screen;
+  -webkit-mask-image: radial-gradient(
+    circle at var(--fx, 62%) var(--fy, 40%),
+    transparent 0,
+    transparent calc(var(--fr, 160px) * 0.55),
+    #000 var(--fr, 160px)
+  );
+  mask-image: radial-gradient(
+    circle at var(--fx, 62%) var(--fy, 40%),
+    transparent 0,
+    transparent calc(var(--fr, 160px) * 0.55),
+    #000 var(--fr, 160px)
+  );
+}
+.hero__shade {
+  z-index: -1;
+  background: linear-gradient(
+    to top,
+    color-mix(in srgb, var(--c-bg) 92%, transparent) 0%,
+    color-mix(in srgb, var(--c-bg) 55%, transparent) 30%,
+    transparent 60%
+  );
+  pointer-events: none;
+}
+.hero__content {
+  padding-block: var(--s-12) var(--s-8);
+  pointer-events: none; /* the ink under the text still follows the pointer */
+}
+.hero__content a {
+  pointer-events: auto;
+}
+.hero__title {
+  margin: var(--s-2) 0 0;
+  font-size: var(--fs-display);
+  font-weight: 750;
+  line-height: var(--lh-tight);
+  letter-spacing: -0.045em;
+}
+.hero__lede {
+  margin: var(--s-2) 0 0;
+  font-size: var(--fs-lede);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-1);
+  margin-top: var(--s-4);
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+  padding-inline: var(--s-3);
+  border-radius: var(--radius-pill);
+  font-weight: 500;
+  text-decoration: none;
+  transition: transform 160ms var(--ease-out), background-color 160ms var(--ease-out);
+}
+.btn:active {
+  transform: scale(0.97);
+}
+.btn--solid {
+  background: var(--c-text);
+  color: var(--c-bg);
+}
+.btn--ghost {
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c-text) 45%, transparent);
+}
+@media (hover: hover) {
+  .btn--solid:hover {
+    background: #fff;
+  }
+  .btn--ghost:hover {
+    background: color-mix(in srgb, var(--c-text) 10%, transparent);
+  }
+}
+
+/* ==== THE READING ==== */
+.reading {
+  min-height: 100svh;
+  padding-block: var(--s-12);
+  display: grid;
+  align-content: center;
+}
+.reading__title {
+  margin: var(--s-2) 0 0;
+  max-width: 22ch;
+  font-size: clamp(2rem, 1.2rem + 2.6vw, 3.5rem);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+.spread {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 17.5rem));
+  justify-content: center;
+  gap: clamp(var(--s-1), 3vw, var(--s-6));
+  margin: var(--s-8) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tarot {
+  display: block;
+  width: 100%;
+  aspect-ratio: 7 / 12;
+  padding: 0;
+  border: 0;
+  background: none;
+  border-radius: 10px;
+  cursor: pointer;
+  perspective: 1200px;
+  -webkit-tap-highlight-color: transparent;
+}
+.tarot:focus-visible {
+  outline-offset: 6px;
+}
+.tarot__inner {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 900ms var(--ease-out);
+}
+.tarot[aria-pressed='true'] .tarot__inner {
+  transform: rotateY(180deg);
+}
+.tarot__side {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 24px 48px -24px rgb(0 0 0 / 0.8), 0 0 0 1px rgb(201 162 74 / 0.18);
+}
+.tarot__side svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.tarot__side--face {
+  transform: rotateY(180deg);
+}
+.tarot__numeral {
+  font-variant-numeric: lining-nums; /* the Fool's 0 must not read as a letter o */
+  font-family: var(--font-serif);
+  font-size: 30px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+.tarot__name {
+  font-family: var(--font-serif);
+  font-size: 25px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.tarot__position {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+@media (hover: hover) {
+  .tarot .tarot__inner {
+    transition: transform 900ms var(--ease-out), translate 240ms var(--ease-out);
+  }
+  .tarot:hover .tarot__inner {
+    translate: 0 -6px;
+  }
+}
+
+@media (max-width: 40rem) {
+  .wordmark span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+  .pills .pill {
+    padding-inline: var(--s-1);
+  }
+  .actions .btn {
+    flex: 1 1 100%;
+    justify-content: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn,
+  .tarot .tarot__inner {
+    transition: none;
+  }
+}

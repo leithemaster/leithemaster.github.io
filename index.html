@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Liem Nguyen · Front-end developer who designs</title>
+    <meta
+      name="description"
+      content="Liem Nguyen, front-end developer and UI/UX designer: React, TypeScript and accessible UI, with 6 years on both sides of the handoff."
+    />
+    <meta name="theme-color" content="#090a12" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=DM+Mono:wght@400&family=DM+Sans:opsz,wght@9..40,300..800&display=swap"
+    />
+    <link rel="preload" as="image" href="/hero.webp" fetchpriority="high" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="site-header">
+      <div class="wrap site-header__inner">
+        <a class="wordmark" href="/" aria-label="Liem Nguyen, home"><img src="/mark.svg" alt="" width="21" height="36" /><span>Liem Nguyen</span></a>
+        <nav aria-label="Primary">
+          <ul class="pills">
+            <li><a class="pill" href="/#reading">Reading</a></li>
+            <li><a class="pill" href="/resume.html">Resume</a></li>
+            <li><a class="pill" href="/design.html">Design</a></li>
+            <li><a class="pill" href="mailto:NguyenL4@outlook.com">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="hero" id="top" aria-labelledby="hero-title">
+        <img
+          class="hero__photo"
+          src="/hero.webp"
+          width="1280"
+          height="816"
+          alt="Seen from above, a crowd in matching blue work jackets looks up at the camera. In the middle stands one man in a black suit and glasses."
+          fetchpriority="high"
+        />
+        <canvas class="hero__ink" aria-hidden="true"></canvas>
+        <div class="hero__shade" aria-hidden="true"></div>
+
+        <div class="wrap hero__content">
+          <p class="label">Front-end developer · UI/UX designer · 6 years</p>
+          <h1 id="hero-title" class="hero__title">Liem Nguyen</h1>
+          <p class="hero__lede">I design it. Then I build it.</p>
+          <div class="actions">
+            <a class="btn btn--solid" href="#reading">Draw a card</a>
+            <a class="btn btn--ghost" href="/Liem-Nguyen-Resume.pdf">Resume, PDF</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="reading" id="reading" aria-labelledby="reading-title">
+        <div class="wrap">
+          <p class="label">The reading</p>
+          <h2 id="reading-title" class="reading__title">Three cards: where I've been, where I am, what's next.</h2>
+          <ul class="spread" role="list">
+            <li>
+              <button class="tarot" type="button" data-tarot="past" aria-label="Card I, the past: The Magician. Turn it over."></button>
+            </li>
+            <li>
+              <button class="tarot" type="button" data-tarot="present" aria-label="Card II, the present: The Fool. Turn it over."></button>
+            </li>
+            <li>
+              <button class="tarot" type="button" data-tarot="future" aria-label="Card III, the future: The Star. Turn it over."></button>
+            </li>
+          </ul>
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

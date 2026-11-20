@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Design · Liem Nguyen</title>
+    <meta
+      name="description"
+      content="The design document for Liem Nguyen's site: how a photo, an ink effect and a tarot deck became one idea, and the brand system that holds it together."
+    />
+    <meta name="theme-color" content="#090a12" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=DM+Mono:wght@400&family=DM+Sans:opsz,wght@9..40,300..800&display=swap"
+    />
+  </head>
+  <body class="page-design">
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="site-header site-header--solid">
+      <div class="wrap site-header__inner">
+        <a class="wordmark" href="/" aria-label="Liem Nguyen, home"><img src="/mark.svg" alt="" width="21" height="36" /><span>Liem Nguyen</span></a>
+        <nav aria-label="Primary">
+          <ul class="pills">
+            <li><a class="pill" href="/#reading">Reading</a></li>
+            <li><a class="pill" href="/resume.html">Resume</a></li>
+            <li><a class="pill" href="/design.html" aria-current="page">Design</a></li>
+            <li><a class="pill" href="mailto:NguyenL4@outlook.com">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <!-- ============ Opening ============ -->
+      <section class="doc-intro" aria-labelledby="doc-title">
+        <div class="wrap">
+          <p class="label">Design document · Version 1 · 2026</p>
+          <h1 id="doc-title" class="doc-intro__title">How this site came to be.</h1>
+          <p class="doc-intro__lede">
+            Three things I love, set into one idea: a reading where you turn the cards and find me.
+            This page is the thinking behind it, and the system that holds it together.
+          </p>
+          <ol class="doc-index">
+            <li><a href="#figure"><span>01</span> The figure</a></li>
+            <li><a href="#ink"><span>02</span> The ink</a></li>
+            <li><a href="#cards"><span>03</span> The cards</a></li>
+            <li><a href="#system"><span>04</span> The system</a></li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- ============ 01 The figure ============ -->
+      <section class="doc-section" id="figure" aria-labelledby="figure-title">
+        <div class="wrap doc-split">
+          <div class="doc-copy">
+            <p class="label">01 · The figure</p>
+            <h2 id="figure-title">One person not in uniform.</h2>
+            <p>
+              I made this image to say what a resume can't. A crowd of capable people in matching
+              blue jackets, all looking up, and one person in black. That's me: not louder than
+              anyone, just made differently. A designer who also builds.
+            </p>
+            <p>
+              Everything else is arranged around him. The ink clears around him, the type sits
+              below him, and the blue of the jackets became the colour of the whole site.
+            </p>
+            <ul class="rules">
+              <li>He is never cropped out, at any screen size.</li>
+              <li>Nothing covers his face: not ink, not type, not buttons.</li>
+              <li>The photo is darkened to sit under type, never recoloured.</li>
+            </ul>
+          </div>
+          <figure class="doc-visual doc-visual--photo">
+            <img
+              src="/hero.webp"
+              width="1280"
+              height="816"
+              loading="lazy"
+              alt="Seen from above, a crowd in matching blue work jackets looks up at the camera. In the middle stands one man in a black suit and glasses."
+            />
+          </figure>
+        </div>
+      </section>
+
+      <!-- ============ 02 The ink ============ -->
+      <section class="doc-section" id="ink" aria-labelledby="ink-title">
+        <div class="wrap doc-split doc-split--flip">
+          <div class="doc-copy">
+            <p class="label">02 · The ink</p>
+            <h2 id="ink-title">Because I started with a brush.</h2>
+            <p>
+              Before code there was drawing, and ink is the material that answers the hand. Here it
+              follows your cursor, trails a little behind, and settles like smoke. It is tuned slow
+              on purpose: it should feel like breathing, not like a screensaver.
+            </p>
+            <p>
+              It's a real fluid simulation running on the GPU, written by hand. The colours are
+              sampled from the jackets in the photo, with a thread of the tarot gold.
+            </p>
+            <dl class="specs">
+              <div><dt>Follows the cursor</dt><dd>5 / s</dd></div>
+              <div><dt>Push</dt><dd>0.45×</dd></div>
+              <div><dt>Swirl</dt><dd>14</dd></div>
+              <div><dt>Ink fades</dt><dd>0.55 / s</dd></div>
+              <div><dt>Idle drift</dt><dd>0.45×</dd></div>
+            </dl>
+            <ul class="rules">
+              <li>One ink surface per screen.</li>
+              <li>Over a photo it blends with <code>screen</code>, so it lights the picture instead of hiding it.</li>
+              <li>With reduced motion it stops drifting; off screen it stops drawing.</li>
+            </ul>
+          </div>
+          <div class="doc-visual doc-visual--ink" data-ink-specimen>
+            <canvas aria-hidden="true"></canvas>
+            <p class="doc-visual__hint label" aria-hidden="true">Move across the panel</p>
+            <ul class="ink-swatches" aria-label="Ink colours">
+              <li style="--sw: #2f43d6">Ultramarine</li>
+              <li style="--sw: #1a248c">Deep blue</li>
+              <li style="--sw: #c9a24a">Gilt</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 03 The cards ============ -->
+      <section class="doc-section" id="cards" aria-labelledby="cards-title">
+        <div class="wrap">
+          <div class="doc-copy doc-copy--wide">
+            <p class="label">03 · The cards</p>
+            <h2 id="cards-title">Because I've always loved cards.</h2>
+            <p>
+              Card games got me first: the shuffle, the deal, the second before a card turns over.
+              Then the cards themselves. Frames, suits, numerals, whole little worlds printed in a
+              few square inches. Card design is some of my favourite art there is.
+            </p>
+            <p>
+              A tarot reading gave the site its shape. It turns cards for the past, the present and
+              the future, one at a time. Here the person being read is me, so learning about my work
+              is also learning who I am.
+            </p>
+          </div>
+
+          <ul class="spread spread--doc" role="list">
+            <li>
+              <button class="tarot" type="button" data-tarot="past" aria-label="Card I, the past: The Magician. Turn it over."></button>
+            </li>
+            <li>
+              <button class="tarot" type="button" data-tarot="present" aria-label="Card II, the present: The Fool. Turn it over."></button>
+            </li>
+            <li>
+              <button class="tarot" type="button" data-tarot="future" aria-label="Card III, the future: The Star. Turn it over."></button>
+            </li>
+          </ul>
+
+          <div class="sys-block sys-block--tight">
+            <h3 class="doc-h3">Why these three</h3>
+            <ul class="card-reasons" role="list">
+              <li>
+                <p class="card-reasons__name">I · The Magician</p>
+                <p>Because I make magic when I work on sites. A blank file turns into something that moves when you touch it.</p>
+              </li>
+              <li>
+                <p class="card-reasons__name">0 · The Fool</p>
+                <p>Because I enjoy everything and want to start everything. People call that foolish. The Fool is the card of jumping in anyway, and that's how I learn.</p>
+              </li>
+              <li>
+                <p class="card-reasons__name">XVII · The Star</p>
+                <p>Because sometimes I give myself the star. It's the card of hope and confidence, and the one I draw when I need the boost.</p>
+              </li>
+            </ul>
+          </div>
+
+          <div class="doc-grid sys-block">
+            <div>
+              <h3 class="doc-h3">The spread</h3>
+              <table class="doc-table">
+                <thead>
+                  <tr><th scope="col">Position</th><th scope="col">Card</th><th scope="col">What it turns up</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Querent</td><td>Me</td><td>The person being read: the hero, and the resume</td></tr>
+                  <tr><td>I · Past</td><td>The Magician</td><td>Learning every tool: Full Sail, React Native at Fund Diet, design lead at Geocent</td></tr>
+                  <tr><td>II · Present</td><td>The Fool</td><td>Starting everything: full stack at Sev1Tech, independent work now, and this site</td></tr>
+                  <tr><td>III · Future</td><td>The Star</td><td>What's next: available now, and the team I want to join</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div>
+              <h3 class="doc-h3">Anatomy of a card</h3>
+              <ol class="anatomy">
+                <li><strong>Frame.</strong> A double gilt rule with a star medallion in each corner. Every card, front and back.</li>
+                <li><strong>Numeral.</strong> Roman, in Cormorant Garamond, over a short rule. The Fool is 0, as in every tarot deck.</li>
+                <li><strong>Emblem.</strong> One idea, drawn in line only. The Magician: the wand pointing up and down ("as above, so below") under the infinity sign, with the deck's four suits on the table. The Fool: a ring for his zero, holding the sun, the mountains, a rose and a bindle at the cliff edge, with the leap breaking out through the ring. The Star: one great star and seven small ones.</li>
+                <li><strong>Title.</strong> Cormorant Garamond in spaced capitals.</li>
+                <li><strong>Position.</strong> Past, present or future, in DM Mono.</li>
+                <li><strong>Back.</strong> A compass star in a sunburst, dotted orbits, crescent moons and a fixed field of stars.</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 04 The system ============ -->
+      <section class="doc-section" id="system" aria-labelledby="system-title">
+        <div class="wrap">
+          <div class="doc-copy doc-copy--wide">
+            <p class="label">04 · The system</p>
+            <h2 id="system-title">The rules that hold it together.</h2>
+            <p>Every colour, size and space on the site comes from these tokens. Nothing is picked by eye on the page.</p>
+          </div>
+
+          <!-- Mark -->
+          <div class="sys-block">
+            <h3 class="doc-h3">The mark</h3>
+            <div class="mark-row">
+              <img class="mark-row__big" src="/mark.svg" alt="The LN mark: a small tarot card with a gold double border, a four-pointed star and the initials LN." width="140" height="240" />
+              <div class="mark-row__copy">
+                <p>A tarot card in miniature: the deck's frame, the star from the Star card, and my initials in the card serif. It is the favicon, the header logo and the signature on everything.</p>
+                <ul class="rules">
+                  <li>Always upright, always on night or card blue.</li>
+                  <li>Never smaller than 16px tall; below 24px the inner rule may drop.</li>
+                </ul>
+              </div>
+              <div class="mark-row__sizes" aria-hidden="true">
+                <img src="/mark.svg" alt="" width="42" height="72" />
+                <img src="/mark.svg" alt="" width="21" height="36" />
+                <img src="/mark.svg" alt="" width="10" height="17" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Colour -->
+          <div class="sys-block">
+            <h3 class="doc-h3">Colour</h3>
+            <ul class="swatches" role="list">
+              <li style="--sw: var(--c-bg); --on: var(--c-text)"><b>Night</b><code>#090a12</code><span>The stage. Every page sits on it.</span></li>
+              <li style="--sw: var(--c-accent); --on: var(--c-text)"><b>Ultramarine</b><code>#2f43d6</code><span>From the jackets. Ink and fills only, never text on night (2.7:1).</span></li>
+              <li style="--sw: var(--c-card); --on: var(--c-gold-hi)"><b>Card blue</b><code>#0b1240</code><span>Card stock. The deck and the mark.</span></li>
+              <li style="--sw: var(--c-gold); --on: var(--c-bg)"><b>Gilt</b><code>#c9a24a</code><span>Line work on cards. 7.4:1 on card blue.</span></li>
+              <li style="--sw: var(--c-text); --on: var(--c-bg)"><b>Bone</b><code>#f1ece2</code><span>Body text. 16.8:1 on night.</span></li>
+              <li style="--sw: var(--c-muted); --on: var(--c-bg)"><b>Ash</b><code>#a9a6b8</code><span>Labels and quiet text. 8.3:1 on night.</span></li>
+              <li style="--sw: var(--c-paper); --on: var(--c-paper-ink)"><b>Paper</b><code>#ebe4d6</code><span>The resume's light stock. Ink on it is 13.1:1.</span></li>
+              <li style="--sw: var(--c-paper-gilt); --on: var(--c-paper)"><b>Old gilt</b><code>#8a6a24</code><span>Rules and ornament on paper. Not for text.</span></li>
+            </ul>
+          </div>
+
+          <!-- Type -->
+          <div class="sys-block">
+            <h3 class="doc-h3">Type</h3>
+            <div class="type-specimens">
+              <div class="type-spec">
+                <p class="label">DM Sans · display and body</p>
+                <p class="type-spec__display">Liem Nguyen</p>
+                <p>Body at 17px with 1.5 line height. Display set tight at −0.045em, up to 11rem. Everything readable is set in this.</p>
+              </div>
+              <div class="type-spec">
+                <p class="label">Cormorant Garamond · cards only</p>
+                <p class="type-spec__serif">The Fool</p>
+                <p>Numerals and titles on the cards, and the arcana line on the resume. Spaced capitals, 600 weight. Never for running text.</p>
+              </div>
+              <div class="type-spec">
+                <p class="label">DM Mono · labels</p>
+                <p class="type-spec__mono">2022–2024 · React · TypeScript</p>
+                <p>Labels, dates, stacks and navigation. Small, uppercase where it labels, tabular numbers where it counts.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Components -->
+          <div class="sys-block">
+            <h3 class="doc-h3">Components</h3>
+            <div class="components">
+              <div class="component">
+                <p class="label">Buttons · one solid, one outline per screen</p>
+                <div class="actions">
+                  <a class="btn btn--solid" href="/#reading">Draw a card</a>
+                  <a class="btn btn--ghost" href="/resume.html">Read the resume</a>
+                </div>
+              </div>
+              <div class="component">
+                <p class="label">Navigation pills · the current page is filled</p>
+                <ul class="pills" aria-label="Example navigation">
+                  <li><span class="pill">Reading</span></li>
+                  <li><span class="pill" data-current>Design</span></li>
+                </ul>
+              </div>
+              <div class="component">
+                <p class="label">Space · 8px scale</p>
+                <ul class="space-scale" aria-label="Spacing steps">
+                  <li style="--s: var(--s-1)">8</li>
+                  <li style="--s: var(--s-2)">16</li>
+                  <li style="--s: var(--s-3)">24</li>
+                  <li style="--s: var(--s-4)">32</li>
+                  <li style="--s: var(--s-6)">48</li>
+                  <li style="--s: var(--s-8)">64</li>
+                  <li style="--s: var(--s-12)">96</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Voice and access -->
+          <div class="doc-grid sys-block">
+            <div>
+              <h3 class="doc-h3">Voice</h3>
+              <ul class="rules">
+                <li>First person, plain, short sentences.</li>
+                <li>Name real things: companies, years, tools, outcomes.</li>
+                <li>The tarot is the frame, never the joke. No fortune-teller puns.</li>
+                <li>No "passionate", "innovative" or "rockstar".</li>
+              </ul>
+            </div>
+            <div>
+              <h3 class="doc-h3">Access</h3>
+              <ul class="rules">
+                <li>All text passes WCAG AA; most passes AAA.</li>
+                <li>Cards are real buttons with spoken labels; the drawings are decoration.</li>
+                <li>Reduced motion: cards turn instantly and the ink stops drifting.</li>
+                <li>The resume prints as plain black on white, so applicant tracking systems read it cleanly.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="doc-close" aria-labelledby="close-title">
+        <div class="wrap">
+          <h2 id="close-title" class="doc-close__title">Now turn the cards.</h2>
+          <div class="actions">
+            <a class="btn btn--solid" href="/#reading">Draw a card</a>
+            <a class="btn btn--ghost" href="/resume.html">Read the resume</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap">
+        <p class="label">© 2026 Liem Nguyen · Designed and built by hand</p>
+      </div>
+    </footer>
+
+    <script type="module" src="/src/design.ts"></script>
+  </body>
+</html>

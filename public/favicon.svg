@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 70 120">
+  <!-- The LN mark: a tarot card in miniature. Night stock, gilt double rule, a star above the initials. -->
+  <defs>
+    <radialGradient id="g" cx="50%" cy="50%" r="75%">
+      <stop offset="0" stop-color="#1d2c95"/>
+      <stop offset="1" stop-color="#0b1240"/>
+    </radialGradient>
+  </defs>
+  <rect x="1" y="1" width="68" height="118" rx="7" fill="url(#g)"/>
+  <rect x="4.5" y="4.5" width="61" height="111" rx="4.5" fill="none" stroke="#c9a24a" stroke-width="2"/>
+  <rect x="9" y="9" width="52" height="102" rx="2" fill="none" stroke="#c9a24a" stroke-width="0.9"/>
+  <path d="M35 22 L37.6 32.4 L48 35 L37.6 37.6 L35 48 L32.4 37.6 L22 35 L32.4 32.4Z" fill="#ecd28f"/>
+  <text x="35" y="86" text-anchor="middle" font-family="'Cormorant Garamond','Times New Roman',serif" font-size="30" font-weight="600" letter-spacing="1" fill="#ecd28f">LN</text>
+  <line x1="22" y1="96" x2="48" y2="96" stroke="#c9a24a" stroke-width="0.9"/>
+</svg>
