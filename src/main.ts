@@ -1,8 +1,10 @@
 import './style.css';
 import { SPREAD } from './cards';
+import { revealEmails } from './email';
 import { mountInk, trackFigure } from './ink';
 import { mountTarot } from './tarot';
 
+revealEmails();
 mountTarot(document, SPREAD);
 
 const hero = document.querySelector<HTMLElement>('.hero');
