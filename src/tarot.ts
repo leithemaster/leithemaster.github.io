@@ -216,8 +216,10 @@ const EMBLEMS: Record<string, () => string> = {
       <path d="M${CX - 66} ${ground} L${CX - 50} ${CY + 12} L${CX - 38} ${CY + 26} L${CX - 18} ${CY} L${CX + 8} ${ground}" fill="none" stroke="${C.gold}" stroke-width="0.9" stroke-linejoin="round"/>
       <path d="M${CX - 42} ${CY + 21} L${CX - 18} ${CY} L${CX - 12} ${CY + 6}" fill="none" stroke="${C.gold}" stroke-width="0.5"/>
       <path d="M${CX - 70} ${ground} L${edge} ${ground} L${edge + 4} ${ground + 8} L${edge - 2} ${ground + 16} L${edge + 6} ${ground + 26}" fill="none" stroke="${C.gold}" stroke-width="1.4" stroke-linejoin="round"/>
-      <line x1="${CX - 34}" y1="${ground + 26}" x2="${CX - 32}" y2="${ground + 8}" stroke="${C.gold}" stroke-width="0.9"/>
-      ${rose(CX - 34, ground + 22, 4.5)}
+      <path d="M${CX - 40} ${ground + 27} L${CX - 18} ${ground + 27}" fill="none" stroke="${C.gold}" stroke-width="0.8" stroke-linecap="round"/>
+      <path d="M${CX - 29} ${ground + 27} Q ${CX - 30} ${ground + 20} ${CX - 28} ${ground + 12}" fill="none" stroke="${C.gold}" stroke-width="0.9"/>
+      <path d="M${CX - 29.4} ${ground + 21} q -6 -1 -7 -6 q 5 0 7 6Z" fill="${C.gold}"/>
+      ${rose(CX - 28, ground + 9, 4.2)}
       <line x1="${CX + 10}" y1="${ground}" x2="${CX + 29}" y2="${CY + 8}" stroke="${C.gold}" stroke-width="2.2" stroke-linecap="round"/>
       <circle cx="${CX + 33}" cy="${CY + 2}" r="8" fill="${C.card}" stroke="${C.gold}" stroke-width="1.2"/>
       <path d="M${CX + 28} ${CY - 5} L${CX + 33} ${CY - 10} L${CX + 38} ${CY - 5}" fill="none" stroke="${C.gold}" stroke-width="1"/>
