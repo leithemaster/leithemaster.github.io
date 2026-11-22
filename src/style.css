@@ -369,6 +369,30 @@ a {
   }
 }
 
+.reading__more {
+  margin: var(--s-6) 0 0;
+  text-align: center;
+}
+.reading__more a {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-1);
+  min-height: 44px;
+  color: var(--c-gold-hi);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+@media (hover: hover) {
+  .reading__more a:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    text-decoration-thickness: 1px;
+  }
+}
+
 /* ==== CONTACT (the Star's section) ==== */
 .contact {
   min-height: 100svh;
@@ -462,8 +486,13 @@ a {
     overflow: hidden;
     clip-path: inset(50%);
   }
+  /* Five pills have to fit beside the mark at 360px: tighter padding and tracking, still 44px tall. */
+  .pills {
+    gap: 2px;
+  }
   .pills .pill {
-    padding-inline: var(--s-1);
+    padding-inline: 6px;
+    letter-spacing: 0.04em;
   }
   .actions .btn {
     flex: 1 1 100%;
