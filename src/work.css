@@ -1,0 +1,410 @@
+/* ==== THE WORK ====
+   Case studies, grouped under the card each one belongs to. Night ground for reading,
+   card stock with the gilt rule for the drawings, so each figure reads as part of the deck. */
+
+.site-header--solid {
+  position: sticky;
+  background: color-mix(in srgb, var(--c-bg) 88%, transparent);
+  backdrop-filter: blur(10px);
+}
+
+.work {
+  --line: color-mix(in srgb, var(--c-text) 16%, transparent);
+  padding-block: var(--s-8) var(--s-12);
+}
+:where(.work) :where(h1, h2, h3, h4, p, dl, dd) {
+  margin: 0;
+}
+
+/* ---- intro ---- */
+.work-intro {
+  display: grid;
+  gap: var(--s-3);
+  padding-bottom: var(--s-8);
+}
+.work-intro__title {
+  max-width: 14ch;
+  font-size: clamp(3rem, 1rem + 6.5vw, 7.5rem);
+  font-weight: 750;
+  line-height: var(--lh-tight);
+  letter-spacing: -0.045em;
+}
+.work-intro__lede {
+  max-width: 44ch;
+  font-size: var(--fs-lede);
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+}
+.work-intro__note {
+  max-width: 62ch;
+  line-height: 1.6;
+}
+.work-index ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-1);
+  margin: var(--s-2) 0 0;
+  padding: 0;
+  list-style: none;
+}
+.work-index a {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-1);
+  min-height: 44px;
+  padding-inline: var(--s-2);
+  border-radius: var(--radius-pill);
+  box-shadow: inset 0 0 0 1px var(--line);
+  text-decoration: none;
+  transition: background-color 160ms var(--ease-out);
+}
+.work-index .label {
+  color: var(--c-gold);
+}
+@media (hover: hover) {
+  .work-index a:hover {
+    background: color-mix(in srgb, var(--c-text) 8%, transparent);
+  }
+}
+
+/* ---- the card a group of cases sits under ---- */
+.arcana {
+  padding-top: var(--s-8);
+}
+.arcana__head {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  padding-block: var(--s-3);
+  border-block: 1px solid color-mix(in srgb, var(--c-gold) 45%, transparent);
+}
+.arcana__numeral {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 3.5rem;
+  aspect-ratio: 7 / 12;
+  border-radius: 6px;
+  background: radial-gradient(circle, var(--c-card-glow), var(--c-card) 75%);
+  box-shadow: inset 0 0 0 1px var(--c-gold), inset 0 0 0 4px var(--c-card), inset 0 0 0 4.5px var(--c-gold);
+  color: var(--c-gold-hi);
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  font-weight: 600;
+  font-variant-numeric: lining-nums; /* the Fool's 0 must not read as a letter o */
+}
+.arcana__name {
+  color: var(--c-gold-hi);
+  font-family: var(--font-serif);
+  font-size: clamp(1.5rem, 1.1rem + 1.4vw, 2.25rem);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+.arcana__head .label {
+  margin-top: 6px;
+}
+
+/* ---- one case ---- */
+.case {
+  padding-top: var(--s-8);
+  scroll-margin-top: var(--s-12);
+}
+.case + .case {
+  margin-top: var(--s-8);
+  border-top: 1px solid var(--line);
+}
+.case__head {
+  display: grid;
+  grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
+  align-items: end;
+  gap: var(--s-2) var(--s-4);
+}
+.case__num {
+  grid-column: 1 / -1;
+  color: var(--c-gold);
+}
+.case__title {
+  max-width: 20ch;
+  font-size: clamp(1.75rem, 1.1rem + 2.2vw, 3rem);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+.case__meta {
+  display: grid;
+  gap: 6px;
+}
+@media (min-width: 60.0625rem) {
+  .case__meta {
+    grid-area: 2 / 2;
+  }
+}
+.case__meta div {
+  display: grid;
+  grid-template-columns: 5.5em minmax(0, 1fr);
+  gap: var(--s-2);
+}
+.case__meta dt {
+  padding-top: 3px;
+}
+.case__summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--s-3) var(--s-4);
+  margin-top: var(--s-6);
+}
+.case__summary div {
+  padding-top: var(--s-2);
+  border-top: 1px solid var(--line);
+}
+.case__summary dd {
+  max-width: 34ch;
+  margin-top: var(--s-1);
+}
+
+/* ---- the drawing, on card stock ---- */
+.sheet {
+  --rule: color-mix(in srgb, var(--c-gold) 40%, transparent);
+  margin: var(--s-6) 0 0;
+  padding: clamp(var(--s-2), 3vw, var(--s-6));
+  border-radius: 12px;
+  background: radial-gradient(ellipse at 50% 35%, color-mix(in srgb, var(--c-card-glow) 45%, var(--c-card)), var(--c-card) 70%);
+  color: var(--c-text);
+  /* the cards' double gilt rule */
+  box-shadow: inset 0 0 0 1px var(--c-gold), inset 0 0 0 7px var(--c-card), inset 0 0 0 7.5px var(--rule), 0 24px 48px -24px rgb(0 0 0 / 0.8);
+}
+.sheet .drawing {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.sheet .drawing [data-part] {
+  transition: opacity 400ms var(--ease-out);
+}
+.sheet[data-stage='problem'] [data-part]:not([data-part='problem']),
+.sheet[data-stage='design'] [data-part]:not([data-part='design']),
+.sheet[data-stage='build'] [data-part]:not([data-part='build']),
+.sheet[data-stage='outcome'] [data-part]:not([data-part='outcome']) {
+  opacity: 0.16;
+}
+.sheet .label {
+  color: var(--c-muted);
+}
+.sheet__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-2) var(--s-4);
+  margin-top: var(--s-3);
+  padding-top: var(--s-2);
+  border-top: 1px solid var(--rule);
+}
+.stages {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.stages:not(.is-live) {
+  display: none;
+}
+.stages button {
+  min-height: 44px;
+  padding-inline: var(--s-2);
+  border: 1px solid color-mix(in srgb, var(--c-gold) 45%, transparent);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--c-gold-hi);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 160ms var(--ease-out), border-color 160ms var(--ease-out), transform 160ms var(--ease-out);
+}
+.stages button:active {
+  transform: scale(0.97);
+}
+.stages button[aria-pressed='true'] {
+  border-color: var(--c-gold-hi);
+  background: var(--c-gold-hi);
+  color: var(--c-card);
+}
+.stages button:focus-visible,
+.sheet__scroll:focus-visible {
+  outline-color: var(--c-gold-hi);
+}
+@media (hover: hover) {
+  .stages button:hover {
+    border-color: var(--c-gold-hi);
+  }
+}
+.sheet__note {
+  min-height: 1.5em;
+  max-width: 60ch;
+  margin-top: var(--s-1);
+}
+
+/* ---- the full case, folded ---- */
+.case__more {
+  margin-top: var(--s-4);
+}
+/* The way into each full case: a solid gilt button, outlined in gilt once open. */
+.case__more summary {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-1);
+  min-height: 52px;
+  padding-inline: var(--s-3);
+  border-radius: var(--radius-pill);
+  background: var(--c-gold-hi);
+  color: var(--c-card);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  list-style: none;
+  transition: transform 160ms var(--ease-out), background-color 160ms var(--ease-out), color 160ms var(--ease-out);
+}
+.case__more summary:active {
+  transform: scale(0.97);
+}
+.case__more[open] summary {
+  background: transparent;
+  color: var(--c-gold-hi);
+  box-shadow: inset 0 0 0 1px var(--c-gold);
+}
+.case__more summary::-webkit-details-marker {
+  display: none;
+}
+.case__more .arrow {
+  display: inline-block;
+  transition: transform 300ms var(--ease-out), translate 200ms var(--ease-out);
+}
+.case__more[open] .arrow {
+  transform: rotate(90deg);
+}
+.case__more .when-open,
+.case__more[open] .when-closed {
+  display: none;
+}
+.case__more[open] .when-open {
+  display: inline;
+}
+@media (hover: hover) {
+  .case__more summary:hover {
+    background: color-mix(in srgb, var(--c-gold-hi) 70%, #fff);
+  }
+  .case__more[open] summary:hover {
+    background: color-mix(in srgb, var(--c-gold) 14%, transparent);
+  }
+  .case__more summary:hover .arrow {
+    translate: 3px 0;
+  }
+}
+.chapters {
+  margin-top: var(--s-3);
+}
+.chapter {
+  display: grid;
+  grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+  gap: var(--s-2) var(--s-4);
+  padding-block: var(--s-4);
+  border-top: 1px solid var(--line);
+}
+.chapter__title {
+  font-size: 1.375rem;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+}
+.prose {
+  display: grid;
+  gap: var(--s-2);
+  max-width: 62ch;
+}
+.prose strong {
+  font-weight: 600;
+}
+.stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px var(--s-3);
+  margin: var(--s-1) 0 0;
+  padding: 0;
+  list-style: none;
+}
+.stack li {
+  color: var(--c-muted);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: 0.04em;
+}
+
+/* ---- the Star, to close ---- */
+.work-next {
+  margin-top: var(--s-12);
+  padding-top: var(--s-8);
+  border-top: 1px solid var(--line);
+}
+.work-next .label {
+  color: var(--c-gold-hi);
+}
+.work-next__title {
+  margin-top: var(--s-2);
+  max-width: 14ch;
+  font-size: clamp(2.5rem, 1rem + 5vw, 5.5rem);
+  font-weight: 750;
+  line-height: var(--lh-tight);
+  letter-spacing: -0.045em;
+}
+
+/* ---- narrow screens ---- */
+@media (max-width: 60rem) {
+  .case__head {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+  }
+  .case__summary {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .chapter {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 40rem) {
+  .sheet {
+    margin-inline: calc(var(--gutter) * -1);
+    border-radius: 0;
+    box-shadow: none;
+  }
+  /* Wide drawings keep a readable scale on phones: the sheet pans sideways instead of shrinking. */
+  .sheet__scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .sheet__scroll .drawing {
+    width: 720px;
+    max-width: none;
+  }
+  .sheet__bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .stages button {
+    flex: 1 1 auto;
+    padding-inline: var(--s-1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sheet .drawing [data-part],
+  .stages button,
+  .case__more summary,
+  .case__more .arrow {
+    transition: none;
+  }
+}

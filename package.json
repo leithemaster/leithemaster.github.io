@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "figures": "node tools/figures.mjs",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview"
   },
