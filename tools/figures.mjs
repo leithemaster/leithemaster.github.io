@@ -71,19 +71,25 @@ function arrow(x1, y1, x2, y2, s = 7, width = 1.4) {
 }
 
 /**
- * A dotted orbit, clockwise, with an arrowhead at each angle (degrees). The orbit is drawn as
- * arcs that break around each head, and the head is centred in its gap.
+ * A dotted orbit, clockwise, with an arrowhead at each of `arrows` (degrees) and a star node of
+ * radius `nodeR` at each of `nodes`. The dots break around every head and every node, so
+ * nothing sits on top of a dot; each head is centred in its gap.
  */
-function orbit(cx, cy, r, degs, s = 7, width = 1.2) {
+function orbit(cx, cy, r, arrows, nodes = [], nodeR = 16, s = 7, width = 1.2) {
   const at = (t) => `${f(cx + r * Math.cos(t))} ${f(cy + r * Math.sin(t))}`;
-  const angs = degs.map((d) => (d * Math.PI) / 180).sort((a, b) => a - b);
-  const gap = (s / 2 + 8) / r;
+  const rad = (d) => (d * Math.PI) / 180;
+  const stops = [
+    ...arrows.map((d) => ({ a: rad(d), half: (s / 2 + 8) / r })),
+    ...nodes.map((d) => ({ a: rad(d), half: (nodeR + 7) / r })),
+  ].sort((p, q) => p.a - q.a);
   let out = '';
-  angs.forEach((a, i) => {
-    const next = i < angs.length - 1 ? angs[i + 1] : angs[0] + Math.PI * 2;
-    const a0 = a + gap, a1 = next - gap;
-    out += dotted(`M${at(a0)} A${r} ${r} 0 ${a1 - a0 > Math.PI ? 1 : 0} 1 ${at(a1)}`, width);
-    const tip = a + s / 2 / r;
+  stops.forEach((p, i) => {
+    const q = i < stops.length - 1 ? stops[i + 1] : { ...stops[0], a: stops[0].a + Math.PI * 2 };
+    const a0 = p.a + p.half, a1 = q.a - q.half;
+    if (a1 > a0) out += dotted(`M${at(a0)} A${r} ${r} 0 ${a1 - a0 > Math.PI ? 1 : 0} 1 ${at(a1)}`, width);
+  });
+  arrows.forEach((d) => {
+    const tip = rad(d) + s / 2 / r;
     out += chevron(cx + r * Math.cos(tip), cy + r * Math.sin(tip), -Math.sin(tip), Math.cos(tip), s);
   });
   return out;
@@ -179,7 +185,7 @@ function marines() {
 
   // problem: a request's life, drawn as the Fool's dotted leap between three stars
   const sy = 62, nodes = [[60, 'RAISED', 'start'], [600, 'IN PROGRESS', 'middle'], [1140, 'RESOLVED', 'end']];
-  let pr = dotted(`M60 ${sy} L320 ${sy}`) + chevron(333, sy, 1, 0) + dotted(`M344 ${sy} L860 ${sy}`) + chevron(873, sy, 1, 0) + dotted(`M884 ${sy} L1140 ${sy}`);
+  let pr = dotted(`M79 ${sy} L320 ${sy}`) + chevron(333, sy, 1, 0) + dotted(`M344 ${sy} L581 ${sy}`) + dotted(`M619 ${sy} L860 ${sy}`) + chevron(873, sy, 1, 0) + dotted(`M884 ${sy} L1121 ${sy}`);
   nodes.forEach(([nx, t, a], i) => {
     pr += `<circle cx="${nx}" cy="${sy}" r="12" fill="${C.card}" stroke-width="1"/>${sparkle(nx, sy, 8, i === 2 ? C.hi : C.gold)}`;
     pr += label(nx + (a === 'start' ? -12 : a === 'end' ? 12 : 0), sy - 24, t, { anchor: a, fill: C.hi });
@@ -333,13 +339,13 @@ function nexgen() {
 
   // the layers are joined: a request runs down and back up
   [zone + 38, zone + 238].forEach((cx) => {
-    [ys[0] + h, ys[1] + h].forEach((y0) => { g += dotted(`M${cx} ${y0 + 4} L${cx} ${y0 + 26}`, 1.2) + sparkle(cx, y0 + 15, 4, C.hi); });
+    [ys[0] + h, ys[1] + h].forEach((y0) => { g += `<line x1="${cx}" y1="${y0 + 4}" x2="${cx}" y2="${y0 + 8}" stroke-width="0.8"/><line x1="${cx}" y1="${y0 + 22}" x2="${cx}" y2="${y0 + 26}" stroke-width="0.8"/>` + sparkle(cx, y0 + 15, 4, C.hi); });
   });
 
   // design: the collaboration loop, drawn like the Star's orbit
   const cx = 950, cy = 262, rx = 170, ry = 170;
-  let pl = orbit(cx, cy, rx, [-30, 90, 210]);
-  pl += `<circle cx="${cx}" cy="${cy}" r="${rx - 14}" stroke-width="0.4"/>`;
+  let pl = orbit(cx, cy, rx, [-30, 90, 210], [-90, 30, 150], 16);
+  pl += `<circle cx="${cx}" cy="${cy}" r="${rx - 28}" stroke-width="0.4"/>`;
   pl += compass(cx, cy, 52, 9) + sparkle(cx, cy, 16, C.hi);
   pl += label(cx, cy + 82, 'EACH SPRINT', { size: 11, fill: C.muted, anchor: 'middle' });
   const nodes = [[-90, 'DESIGN REVIEW'], [30, 'UX FEEDBACK'], [150, 'SPRINT PLANNING']];
@@ -417,7 +423,7 @@ function game() {
 
   // design: the core loop, one action going round
   const cx = 600, cy = 244, r = 132;
-  let de = orbit(cx, cy, r, [-45, 45, 135, 225]);
+  let de = orbit(cx, cy, r, [-45, 45, 135, 225], [-90, 0, 90, 180], 15);
   de += `<circle cx="${cx}" cy="${cy}" r="30" fill="${C.ultra}" stroke-width="1.2"/>${sparkle(cx, cy, 14, C.hi)}`;
   de += label(cx, cy + 56, 'ONE ACTION', { size: 11, fill: C.muted, anchor: 'middle' });
   [[-90, 'PICK UP'], [0, 'SELL'], [90, 'UPGRADE'], [180, 'BIGGER PIT']].forEach(([deg, name], i) => {
