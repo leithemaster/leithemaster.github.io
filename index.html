@@ -107,6 +107,24 @@
             </p>
             <p class="contact__status label"><span aria-hidden="true">✦</span> Available now</p>
           </div>
+          <div class="contact__side">
+          <figure class="film-card">
+            <div class="film-card__screen">
+              <!-- The jobs, dealt as cards (huashu-motion, trials/huashu-motion/jobs-film). Silent, no watermark.
+                   JS plays it only without reduced motion; otherwise the poster rests and the button plays it. -->
+              <video class="film-card__video" width="1280" height="720" muted loop playsinline preload="none"
+                poster="/jobs-film-poster.jpg" aria-describedby="film-desc">
+                <source src="/jobs-film.webm" type="video/webm" />
+                <source src="/jobs-film.mp4" type="video/mp4" />
+              </video>
+            </div>
+            <figcaption id="film-desc" class="visually-hidden">
+              A short silent film of my jobs as tarot cards: Fund Diet, 2018–2019, full stack developer; Geocent,
+              2019–2022, UI/UX designer; Sev1Tech, 2022–2024, full stack developer; independent front-end
+              development, 2024 to now. It ends on the Star card: available now.
+            </figcaption>
+            <button class="film-card__toggle" type="button" hidden>Play the film</button>
+          </figure>
           <ul class="contact-list" role="list">
             <li>
               <span class="label">Email</span>
@@ -125,6 +143,7 @@
               <a href="./Liem-Nguyen-Resume.pdf" download>Download PDF <span aria-hidden="true">↓</span></a>
             </li>
           </ul>
+          </div>
         </div>
       </section>
     </main>
