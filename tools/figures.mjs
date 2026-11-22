@@ -35,11 +35,11 @@ function sparkle(x, y, r, fill = C.gold) {
 
 /** A plate: the cards' double gilt rule with a star medallion in each corner. */
 function plate(x, y, w, h, fill = C.card) {
-  const b = 7;
+  const b = 10; // inner rule inset: leaves the corner stars clear of the outer edge
   const corners = [[x + b, y + b], [x + w - b, y + b], [x + b, y + h - b], [x + w - b, y + h - b]];
   return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="6" fill="${fill}" stroke="${C.gold}" stroke-width="1.2"/>` +
     `<rect x="${x + b}" y="${y + b}" width="${w - b * 2}" height="${h - b * 2}" rx="2" fill="none" stroke="${C.gold}" stroke-width="0.5"/>` +
-    corners.map(([cx, cy]) => `<circle cx="${cx}" cy="${cy}" r="6" fill="${C.card}" stroke="${C.gold}" stroke-width="0.6"/>${sparkle(cx, cy, 4)}`).join('');
+    corners.map(([cx, cy]) => `<circle cx="${cx}" cy="${cy}" r="4.5" fill="${C.card}" stroke="${C.gold}" stroke-width="0.6"/>${sparkle(cx, cy, 3)}`).join('');
 }
 
 /** Mono label. */
@@ -310,7 +310,7 @@ function nexgen() {
   });
 
   // design: the collaboration loop, drawn like the Star's orbit
-  const cx = 930, cy = 262, rx = 170, ry = 170;
+  const cx = 950, cy = 262, rx = 170, ry = 170;
   let pl = `<circle cx="${cx}" cy="${cy}" r="${rx}" stroke-width="1.2" stroke-dasharray="0.6 6"/>`;
   pl += `<circle cx="${cx}" cy="${cy}" r="${rx - 14}" stroke-width="0.4"/>`;
   pl += compass(cx, cy, 52, 9) + sparkle(cx, cy, 16, C.hi);
@@ -319,7 +319,9 @@ function nexgen() {
   nodes.forEach(([deg, name], i) => {
     const t = (deg * Math.PI) / 180, nx = cx + rx * Math.cos(t), ny = cy + ry * Math.sin(t);
     pl += `<circle cx="${f(nx)}" cy="${f(ny)}" r="16" fill="${C.card}"/>${sparkle(nx, ny, 10, i === 0 ? C.hi : C.gold)}`;
-    pl += label(nx, i === 0 ? ny - 28 : ny + 40, name, { anchor: 'middle', fill: C.hi });
+    // lower labels sit below and outward of their star, outside the orbit, so no line crosses them
+    if (i === 0) pl += label(nx, ny - 28, name, { anchor: 'middle', fill: C.hi });
+    else pl += label(i === 1 ? nx - 6 : nx + 6, ny + 40, name, { anchor: i === 1 ? 'start' : 'end', fill: C.hi });
     const m = ((deg + 60) * Math.PI) / 180;
     pl += chevron(cx + rx * Math.cos(m), cy + ry * Math.sin(m), -Math.sin(m), Math.cos(m), 7);
   });
