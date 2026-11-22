@@ -51,8 +51,43 @@ const title = (x, y, text, { size = 18, anchor = 'middle' } = {}) =>
   `<text x="${f(x)}" y="${f(y)}" font-family="${SERIF}" font-size="${size}" font-weight="600" letter-spacing="2.6" text-anchor="${anchor}" fill="${C.hi}" stroke="none">${text}</text>`;
 
 /** A dotted gilt path, the "leap" line from the Fool. */
-const dotted = (d, width = 1.4) =>
-  `<path d="${d}" fill="none" stroke="${C.gold}" stroke-width="${width}" stroke-dasharray="0.6 6" stroke-linecap="round"/>`;
+const DOT_STEP = 6.6;
+const dot = (x, y, width) => `<circle cx="${f(x)}" cy="${f(y)}" r="${f(width * 0.55)}" fill="${C.gold}" stroke="none"/>`;
+
+/**
+ * Dots along a polyline written as "M x y" followed by L, H and V steps. Each segment gets a whole
+ * number of equal steps, so a dot lands exactly on both ends: the gap before a star or an arrow
+ * is the same on either side.
+ */
+function dotted(d, width = 1.4) {
+  const pts = [];
+  let x = 0, y = 0;
+  for (const [, cmd, args] of d.matchAll(/([MLHV])([^MLHV]*)/g)) {
+    const n = args.trim().split(/[\s,]+/).map(Number);
+    if (cmd === 'M' || cmd === 'L') [x, y] = n;
+    else if (cmd === 'H') x = n[0];
+    else y = n[0];
+    pts.push([x, y]);
+  }
+  let out = dot(...pts[0], width);
+  for (let i = 1; i < pts.length; i++) {
+    const [x0, y0] = pts[i - 1], [x1, y1] = pts[i];
+    const steps = Math.max(1, Math.round(Math.hypot(x1 - x0, y1 - y0) / DOT_STEP));
+    for (let k = 1; k <= steps; k++) out += dot(x0 + ((x1 - x0) * k) / steps, y0 + ((y1 - y0) * k) / steps, width);
+  }
+  return `<g>${out}</g>`;
+}
+
+/** Dots along a clockwise arc from angle a0 to a1 (radians), a dot exactly on each end. */
+function dottedArc(cx, cy, r, a0, a1, width = 1.2) {
+  const steps = Math.max(1, Math.round(((a1 - a0) * r) / DOT_STEP));
+  let out = '';
+  for (let k = 0; k <= steps; k++) {
+    const t = a0 + ((a1 - a0) * k) / steps;
+    out += dot(cx + r * Math.cos(t), cy + r * Math.sin(t), width);
+  }
+  return `<g>${out}</g>`;
+}
 
 /** A small chevron pointing along (dx, dy). */
 function chevron(x, y, dx, dy, s = 6, stroke = C.gold) {
@@ -76,7 +111,6 @@ function arrow(x1, y1, x2, y2, s = 7, width = 1.4) {
  * nothing sits on top of a dot; each head is centred in its gap.
  */
 function orbit(cx, cy, r, arrows, nodes = [], nodeR = 16, s = 7, width = 1.2) {
-  const at = (t) => `${f(cx + r * Math.cos(t))} ${f(cy + r * Math.sin(t))}`;
   const rad = (d) => (d * Math.PI) / 180;
   const stops = [
     ...arrows.map((d) => ({ a: rad(d), half: (s / 2 + 8) / r })),
@@ -86,7 +120,7 @@ function orbit(cx, cy, r, arrows, nodes = [], nodeR = 16, s = 7, width = 1.2) {
   stops.forEach((p, i) => {
     const q = i < stops.length - 1 ? stops[i + 1] : { ...stops[0], a: stops[0].a + Math.PI * 2 };
     const a0 = p.a + p.half, a1 = q.a - q.half;
-    if (a1 > a0) out += dotted(`M${at(a0)} A${r} ${r} 0 ${a1 - a0 > Math.PI ? 1 : 0} 1 ${at(a1)}`, width);
+    if (a1 > a0) out += dottedArc(cx, cy, r, a0, a1, width);
   });
   arrows.forEach((d) => {
     const tip = rad(d) + s / 2 / r;
@@ -185,7 +219,7 @@ function marines() {
 
   // problem: a request's life, drawn as the Fool's dotted leap between three stars
   const sy = 62, nodes = [[60, 'RAISED', 'start'], [600, 'IN PROGRESS', 'middle'], [1140, 'RESOLVED', 'end']];
-  let pr = dotted(`M79 ${sy} L320 ${sy}`) + chevron(333, sy, 1, 0) + dotted(`M344 ${sy} L581 ${sy}`) + dotted(`M619 ${sy} L860 ${sy}`) + chevron(873, sy, 1, 0) + dotted(`M884 ${sy} L1121 ${sy}`);
+  let pr = dotted(`M79 ${sy} L320 ${sy}`) + chevron(333, sy, 1, 0) + dotted(`M340 ${sy} L581 ${sy}`) + dotted(`M619 ${sy} L860 ${sy}`) + chevron(873, sy, 1, 0) + dotted(`M880 ${sy} L1121 ${sy}`);
   nodes.forEach(([nx, t, a], i) => {
     pr += `<circle cx="${nx}" cy="${sy}" r="12" fill="${C.card}" stroke-width="1"/>${sparkle(nx, sy, 8, i === 2 ? C.hi : C.gold)}`;
     pr += label(nx + (a === 'start' ? -12 : a === 'end' ? 12 : 0), sy - 24, t, { anchor: a, fill: C.hi });
