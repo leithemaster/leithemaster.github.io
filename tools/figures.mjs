@@ -51,14 +51,82 @@ const title = (x, y, text, { size = 18, anchor = 'middle' } = {}) =>
   `<text x="${f(x)}" y="${f(y)}" font-family="${SERIF}" font-size="${size}" font-weight="600" letter-spacing="2.6" text-anchor="${anchor}" fill="${C.hi}" stroke="none">${text}</text>`;
 
 /** A dotted gilt path, the "leap" line from the Fool. */
-const dotted = (d, width = 1.4) =>
-  `<path d="${d}" fill="none" stroke="${C.gold}" stroke-width="${width}" stroke-dasharray="0.6 6" stroke-linecap="round"/>`;
+const DOT_STEP = 6.6;
+const dot = (x, y, width) => `<circle cx="${f(x)}" cy="${f(y)}" r="${f(width * 0.55)}" fill="${C.gold}" stroke="none"/>`;
+
+/**
+ * Dots along a polyline written as "M x y" followed by L, H and V steps. Each segment gets a whole
+ * number of equal steps, so a dot lands exactly on both ends: the gap before a star or an arrow
+ * is the same on either side.
+ */
+function dotted(d, width = 1.4) {
+  const pts = [];
+  let x = 0, y = 0;
+  for (const [, cmd, args] of d.matchAll(/([MLHV])([^MLHV]*)/g)) {
+    const n = args.trim().split(/[\s,]+/).map(Number);
+    if (cmd === 'M' || cmd === 'L') [x, y] = n;
+    else if (cmd === 'H') x = n[0];
+    else y = n[0];
+    pts.push([x, y]);
+  }
+  let out = dot(...pts[0], width);
+  for (let i = 1; i < pts.length; i++) {
+    const [x0, y0] = pts[i - 1], [x1, y1] = pts[i];
+    const steps = Math.max(1, Math.round(Math.hypot(x1 - x0, y1 - y0) / DOT_STEP));
+    for (let k = 1; k <= steps; k++) out += dot(x0 + ((x1 - x0) * k) / steps, y0 + ((y1 - y0) * k) / steps, width);
+  }
+  return `<g>${out}</g>`;
+}
+
+/** Dots along a clockwise arc from angle a0 to a1 (radians), a dot exactly on each end. */
+function dottedArc(cx, cy, r, a0, a1, width = 1.2) {
+  const steps = Math.max(1, Math.round(((a1 - a0) * r) / DOT_STEP));
+  let out = '';
+  for (let k = 0; k <= steps; k++) {
+    const t = a0 + ((a1 - a0) * k) / steps;
+    out += dot(cx + r * Math.cos(t), cy + r * Math.sin(t), width);
+  }
+  return `<g>${out}</g>`;
+}
 
 /** A small chevron pointing along (dx, dy). */
 function chevron(x, y, dx, dy, s = 6, stroke = C.gold) {
   const L = Math.hypot(dx, dy);
   const ux = dx / L, uy = dy / L, nx = -uy, ny = ux;
   return `<polyline points="${f(x - ux * s + nx * s)},${f(y - uy * s + ny * s)} ${f(x)},${f(y)} ${f(x - ux * s - nx * s)},${f(y - uy * s - ny * s)}" fill="none" stroke="${stroke}" stroke-width="1.2"/>`;
+}
+
+/**
+ * A dotted line ending in an arrowhead at (x2, y2). The dots stop short of the head, so the
+ * head never sits on top of a dot.
+ */
+function arrow(x1, y1, x2, y2, s = 7, width = 1.4) {
+  const L = Math.hypot(x2 - x1, y2 - y1), ux = (x2 - x1) / L, uy = (y2 - y1) / L, e = s + 7;
+  return dotted(`M${f(x1)} ${f(y1)} L${f(x2 - ux * e)} ${f(y2 - uy * e)}`, width) + chevron(x2, y2, ux, uy, s);
+}
+
+/**
+ * A dotted orbit, clockwise, with an arrowhead at each of `arrows` (degrees) and a star node of
+ * radius `nodeR` at each of `nodes`. The dots break around every head and every node, so
+ * nothing sits on top of a dot; each head is centred in its gap.
+ */
+function orbit(cx, cy, r, arrows, nodes = [], nodeR = 16, s = 7, width = 1.2) {
+  const rad = (d) => (d * Math.PI) / 180;
+  const stops = [
+    ...arrows.map((d) => ({ a: rad(d), half: (s / 2 + 8) / r })),
+    ...nodes.map((d) => ({ a: rad(d), half: (nodeR + 7) / r })),
+  ].sort((p, q) => p.a - q.a);
+  let out = '';
+  stops.forEach((p, i) => {
+    const q = i < stops.length - 1 ? stops[i + 1] : { ...stops[0], a: stops[0].a + Math.PI * 2 };
+    const a0 = p.a + p.half, a1 = q.a - q.half;
+    if (a1 > a0) out += dottedArc(cx, cy, r, a0, a1, width);
+  });
+  arrows.forEach((d) => {
+    const tip = rad(d) + s / 2 / r;
+    out += chevron(cx + r * Math.cos(tip), cy + r * Math.sin(tip), -Math.sin(tip), Math.cos(tip), s);
+  });
+  return out;
 }
 
 /** A compass star, as on the card backs. */
@@ -151,12 +219,11 @@ function marines() {
 
   // problem: a request's life, drawn as the Fool's dotted leap between three stars
   const sy = 62, nodes = [[60, 'RAISED', 'start'], [600, 'IN PROGRESS', 'middle'], [1140, 'RESOLVED', 'end']];
-  let pr = dotted(`M60 ${sy} L1140 ${sy}`);
+  let pr = dotted(`M79 ${sy} L320 ${sy}`) + chevron(333, sy, 1, 0) + dotted(`M340 ${sy} L581 ${sy}`) + dotted(`M619 ${sy} L860 ${sy}`) + chevron(873, sy, 1, 0) + dotted(`M880 ${sy} L1121 ${sy}`);
   nodes.forEach(([nx, t, a], i) => {
     pr += `<circle cx="${nx}" cy="${sy}" r="12" fill="${C.card}" stroke-width="1"/>${sparkle(nx, sy, 8, i === 2 ? C.hi : C.gold)}`;
     pr += label(nx + (a === 'start' ? -12 : a === 'end' ? 12 : 0), sy - 24, t, { anchor: a, fill: C.hi });
   });
-  [330, 870].forEach((ax) => { pr += chevron(ax, sy, 1, 0); });
   pr += label(600, sy + 34, 'A SUPPORT REQUEST, FROM RAISED TO RESOLVED', { size: 11, fill: C.muted, anchor: 'middle' });
   g += `<g data-part="problem">${pr}</g>`;
 
@@ -259,8 +326,8 @@ function navy() {
   g += `<g data-part="outcome">${ou}</g>`;
 
   // the reading order: scattered → options → portal
-  g += dotted('M196 230 L312 230') + chevron(318, 230, 1, 0, 7);
-  g += dotted('M658 230 L676 230') + chevron(682, 230, 1, 0, 7);
+  g += arrow(196, 230, 318, 230);
+  g += arrow(652, 230, 682, 230);
 
   return wrap('0 0 1200 470', 'Three scenes left to right, in gold line on deep blue. First, product boxes and training sheets scattered with no home. Then three design options fanned like a hand of cards, labelled A, B and C, with option B lifted and starred as the one picked. Last, a framed portal with a product section of traffic-control tiles (a traffic light, a barrier gate, a cone) beside a training list with progress bars.', g);
 }
@@ -306,13 +373,13 @@ function nexgen() {
 
   // the layers are joined: a request runs down and back up
   [zone + 38, zone + 238].forEach((cx) => {
-    [ys[0] + h, ys[1] + h].forEach((y0) => { g += dotted(`M${cx} ${y0 + 4} L${cx} ${y0 + 26}`, 1.2) + sparkle(cx, y0 + 15, 4, C.hi); });
+    [ys[0] + h, ys[1] + h].forEach((y0) => { g += `<line x1="${cx}" y1="${y0 + 4}" x2="${cx}" y2="${y0 + 8}" stroke-width="0.8"/><line x1="${cx}" y1="${y0 + 22}" x2="${cx}" y2="${y0 + 26}" stroke-width="0.8"/>` + sparkle(cx, y0 + 15, 4, C.hi); });
   });
 
   // design: the collaboration loop, drawn like the Star's orbit
   const cx = 950, cy = 262, rx = 170, ry = 170;
-  let pl = `<circle cx="${cx}" cy="${cy}" r="${rx}" stroke-width="1.2" stroke-dasharray="0.6 6"/>`;
-  pl += `<circle cx="${cx}" cy="${cy}" r="${rx - 14}" stroke-width="0.4"/>`;
+  let pl = orbit(cx, cy, rx, [-30, 90, 210], [-90, 30, 150], 16);
+  pl += `<circle cx="${cx}" cy="${cy}" r="${rx - 28}" stroke-width="0.4"/>`;
   pl += compass(cx, cy, 52, 9) + sparkle(cx, cy, 16, C.hi);
   pl += label(cx, cy + 82, 'EACH SPRINT', { size: 11, fill: C.muted, anchor: 'middle' });
   const nodes = [[-90, 'DESIGN REVIEW'], [30, 'UX FEEDBACK'], [150, 'SPRINT PLANNING']];
@@ -322,13 +389,11 @@ function nexgen() {
     // lower labels sit below and outward of their star, outside the orbit, so no line crosses them
     if (i === 0) pl += label(nx, ny - 28, name, { anchor: 'middle', fill: C.hi });
     else pl += label(i === 1 ? nx - 6 : nx + 6, ny + 40, name, { anchor: i === 1 ? 'start' : 'end', fill: C.hi });
-    const m = ((deg + 60) * Math.PI) / 180;
-    pl += chevron(cx + rx * Math.cos(m), cy + ry * Math.sin(m), -Math.sin(m), Math.cos(m), 7);
   });
   g += `<g data-part="design">${pl}</g>`;
 
   // design feeds the build
-  g += dotted(`M${x + w + 30} ${cy} L${cx - rx - 26} ${cy}`) + chevron(x + w + 26, cy, -1, 0, 7);
+  g += arrow(cx - rx - 26, cy, x + w + 40, cy);
 
   return wrap('0 0 1200 520', 'A web application drawn as three framed plates stacked in gold line on deep blue: a React frontend of interface components on top, a Spring Boot backend of linked services in the middle, and PostgreSQL databases at the base, joined by dotted lines. Beside them, a dotted orbit around a compass star links design review, UX feedback and sprint planning, every sprint.', g);
 }
@@ -392,7 +457,7 @@ function game() {
 
   // design: the core loop, one action going round
   const cx = 600, cy = 244, r = 132;
-  let de = `<circle cx="${cx}" cy="${cy}" r="${r}" stroke-width="1.2" stroke-dasharray="0.6 6"/>`;
+  let de = orbit(cx, cy, r, [-45, 45, 135, 225], [-90, 0, 90, 180], 15);
   de += `<circle cx="${cx}" cy="${cy}" r="30" fill="${C.ultra}" stroke-width="1.2"/>${sparkle(cx, cy, 14, C.hi)}`;
   de += label(cx, cy + 56, 'ONE ACTION', { size: 11, fill: C.muted, anchor: 'middle' });
   [[-90, 'PICK UP'], [0, 'SELL'], [90, 'UPGRADE'], [180, 'BIGGER PIT']].forEach(([deg, name], i) => {
@@ -402,8 +467,6 @@ function game() {
     const lx = i === 1 ? nx + 24 : i === 3 ? nx - 24 : nx;
     const ly = i === 0 ? ny - 26 : i === 2 ? ny + 36 : ny - 14;
     de += label(lx, ly, name, { anchor: side, fill: C.hi });
-    const m = ((deg + 45) * Math.PI) / 180;
-    de += chevron(cx + r * Math.cos(m), cy + r * Math.sin(m), -Math.sin(m), Math.cos(m), 7);
   });
   g += `<g data-part="design">${de}</g>`;
 
@@ -416,14 +479,14 @@ function game() {
     bu += plate(wx, y, ww, wh, i === 1 ? '#0e1650' : C.card);
     bu += step[k](wx + 44, y + wh / 2);
     bu += title(wx + 80, y + 40, name, { anchor: 'start', size: 17 }) + label(wx + 80, y + 60, note, { size: 10, fill: C.muted });
-    if (i < 3) bu += dotted(`M${wx + ww / 2} ${y + wh + 4} L${wx + ww / 2} ${ys[i + 1] - 8}`, 1.2) + chevron(wx + ww / 2, ys[i + 1] - 4, 0, 1, 5);
+    if (i < 3) bu += arrow(wx + ww / 2, y + wh + 3, wx + ww / 2, ys[i + 1] - 3, 5, 1.2);
   });
-  bu += dotted(`M${wx + ww + 6} ${ys[3] + wh / 2} H${wx + ww + 40} V${ys[0] + wh / 2} H${wx + ww + 12}`, 1.2) + chevron(wx + ww + 8, ys[0] + wh / 2, -1, 0, 6);
+  bu += dotted(`M${wx + ww + 6} ${ys[3] + wh / 2} H${wx + ww + 40} V${ys[0] + wh / 2} H${wx + ww + 21}`, 1.2) + chevron(wx + ww + 8, ys[0] + wh / 2, -1, 0, 6);
   g += `<g data-part="build">${bu}</g>`;
 
   // the reading order: the phone, the loop, the way it gets built
-  g += dotted(`M${fx + fw + 30} ${cy} L${cx - r - 32} ${cy}`) + chevron(cx - r - 28, cy, 1, 0, 6);
-  g += dotted(`M${cx + r + 28} ${cy} L${wx - 14} ${cy}`) + chevron(wx - 10, cy, 1, 0, 6);
+  g += arrow(fx + fw + 30, cy, cx - r - 28, cy, 6);
+  g += arrow(cx + r + 28, cy, wx - 10, cy, 6);
 
   return wrap('0 0 1200 500', 'Three parts in gold line on deep blue. Left, a phone showing the game: a cash pill, a goal card, a backpack meter, a pit full of balls and a row of four icon buttons marked as 44 points wide, with a ring timer beside it for a first reward within 15 seconds. Middle, a dotted loop around a star: pick up, sell, upgrade, bigger pit. Right, four framed steps joined top to bottom and back round: design in Figma, code (written by me with help from Claude Code), review, playtest.', g);
 }
