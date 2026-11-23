@@ -295,8 +295,9 @@
     gap: 8pt;
   }
   .resume__cols dl div:first-child,
-  .resume__cols dl div:nth-child(6),
-  .resume__cols dl div:nth-child(7) {
+  .resume__cols dl div:nth-child(2),
+  .resume__cols dl div:nth-child(7),
+  .resume__cols dl div:nth-child(8) {
     grid-column: 1 / -1;
   }
   .resume {
@@ -481,8 +482,9 @@
       gap: 6pt;
     }
     .resume__cols dl div:first-child,
-    .resume__cols dl div:nth-child(6),
-    .resume__cols dl div:nth-child(7) {
+    .resume__cols dl div:nth-child(2),
+    .resume__cols dl div:nth-child(7),
+    .resume__cols dl div:nth-child(8) {
       grid-column: 1 / -1;
     }
     .job,
