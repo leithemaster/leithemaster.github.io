@@ -1,7 +1,6 @@
 import './style.css';
 import { SPREAD } from './cards';
 import { revealEmails } from './email';
-import { mountFilm } from './film';
 import { mountInk, trackFigure } from './ink';
 import { mountTarot } from './tarot';
 
@@ -16,6 +15,3 @@ if (hero && canvas && photo) {
   trackFigure(hero, photo);
   mountInk(canvas, hero);
 }
-
-const film = document.querySelector<HTMLElement>('.film-card');
-if (film) mountFilm(film);
